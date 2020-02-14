@@ -266,7 +266,7 @@ def _post_game_thread(game):
 
     # Prevent old and too new posts - Game must be within the next 2 hours, but also not already started
     game_time = date_parser.parse(game["gameStartTimestampUTC"])
-    now = datetime.utcnow() + timedelta(hours=40)
+    now = datetime.utcnow()
     if game_time - timedelta(hours=2) > now or game_time < now:
         return
 
