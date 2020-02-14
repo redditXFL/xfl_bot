@@ -255,7 +255,7 @@ def _post_postgame_thread(game):
         selftext=_format_game_thread(
             game["gameId"], post_format=POSTGAME_POST_FORMAT),
         send_replies=False,
-        flair_text='game-thread-2')
+        flair_id='game-thread-2')
     submission.mod.distinguish()
 
 
@@ -285,7 +285,7 @@ def _post_game_thread(game):
         title=title,
         selftext=_format_game_thread(game["gameId"]),
         send_replies=False,
-        flair_text='game-thread-1')
+        flair_id='game-thread-1')
     submission.mod.suggested_sort("new")
     submission.mod.distinguish()
 
