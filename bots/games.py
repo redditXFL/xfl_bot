@@ -1,6 +1,6 @@
 import praw
 import re
-import stats as stats_api
+from utils import stats as stats_api
 from dateutil import parser as date_parser
 from datetime import datetime, timedelta
 from . import *
@@ -255,7 +255,7 @@ def _post_postgame_thread(game):
         selftext=_format_game_thread(
             game["gameId"], post_format=POSTGAME_POST_FORMAT),
         send_replies=False,
-        flair_id='game-thread')
+        flair_id=POST_FLAIR_GAME_THREAD)
     submission.mod.distinguish()
 
 
@@ -266,7 +266,7 @@ def _post_game_thread(game):
 
     # Prevent old and too new posts - Game must be within the next 2 hours, but also not already started
     game_time = date_parser.parse(game["gameStartTimestampUTC"])
-    now = datetime.utcnow() - timedelta(hours=32)
+    now = datetime.utcnow() + timedelta(hours=40)
     if game_time - timedelta(hours=2) > now or game_time < now:
         return
 
@@ -285,7 +285,7 @@ def _post_game_thread(game):
         title=title,
         selftext=_format_game_thread(game["gameId"]),
         send_replies=False,
-        flair_id='game-thread')
+        flair_id=POST_FLAIR_GAME_THREAD)
     submission.mod.suggested_sort("new")
     submission.mod.distinguish()
 

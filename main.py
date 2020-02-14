@@ -1,7 +1,7 @@
 import time
-import bots
+from bots import games as game_bot
 from utils import stats
 
 while True:
-    bots.games.update_games()
+    game_bot.update_games()
     time.sleep(30)
