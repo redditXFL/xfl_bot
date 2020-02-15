@@ -33,8 +33,11 @@ while True:
         # Check if its time to run, if so run
         if task["last_run"] + task["interval"] < datetime.now():
             print("Running Task:", task["name"], datetime.now())
-            Thread(target=task["function"], args=task["args"]).start()
-            task["last_run"] = datetime.now()
+            try:
+                Thread(target=task["function"], args=task["args"]).start()
+                task["last_run"] = datetime.now()
+            except Exception as e:
+                print("Error running %s: %s" % (task["name"], e))
         
 
     
