@@ -25,13 +25,13 @@ team_reddits = {
 }
 
 # Titles
-GAME_THREAD_TITLE = GAME_THREAD_LIVE_TAG + " {{HOME_TEAM}} vs. {{AWAY_TEAM}}"
+GAME_THREAD_TITLE = GAME_THREAD_LIVE_TAG + " {{AWAY_TEAM}} at {{HOME_TEAM}}"
 POSTGAME_THREAD_TITLE = GAME_THREAD_FINAL_TAG + \
     " {{WINNER_NAME}} defeat {{LOSER_NAME}}, {{WINNER_SCORE}}-{{LOSER_SCORE}}"
 
 # Post formats
 GAME_POST_FORMAT = """
-[Box Score](http://stats.xfl.com/{{GameID}}) | Coverage: {{NETWORK}} | [Reddit-Stream]({{STREAM_LINK}}) | {{HOME_REDDIT}} | {{AWAY_REDDIT}} 
+[Box Score](http://stats.xfl.com/{{GameID}}) | Coverage: {{NETWORK}} | [Reddit-Stream]({{STREAM_LINK}}) | {{AWAY_REDDIT}} | {{HOME_REDDIT}}
 
 ---
 
@@ -168,8 +168,8 @@ def _format_game_thread(game_id, post_format=GAME_POST_FORMAT, submission_id="")
 
     score_table = "|".join(table_header) + "\n"
     score_table += "|".join(table_alignments) + "\n"
-    score_table += "|".join(table_home_columns) + "\n"
     score_table += "|".join(table_away_columns) + "\n"
+    score_table += "|".join(table_home_columns) + "\n"
 
     text = text.replace("{{SCORING_TABLE}}", score_table)
 
