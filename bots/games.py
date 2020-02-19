@@ -24,6 +24,12 @@ team_reddits = {
     "STL": "[r/battlehawks/](https://www.reddit.com/r/battlehawks/)"
 }
 
+# Teams that want to crosspost
+team_crosspost = {
+    "LA": reddit.subreddit("lawildcats"),
+    "STL": reddit.subreddit("battlehawks")
+}
+
 # Titles
 GAME_THREAD_TITLE = GAME_THREAD_LIVE_TAG + " {{AWAY_TEAM}} at {{HOME_TEAM}}"
 POSTGAME_THREAD_TITLE = GAME_THREAD_FINAL_TAG + \
@@ -230,10 +236,13 @@ def _post_postgame_thread(game):
         return
 
     # Get stats
-    home_name = game["homeTeamName"]
     home_score = game["homeScore"]
-    away_name = game["awayTeamName"]
     away_score = game["awayScore"]
+
+    home_name = game["homeTeamName"]
+    home_team_abbr = game["homeTeamAbbr"]
+    away_name = game["awayTeamName"]
+    away_team_abbr = game["awayTeamAbbr"]
 
     # Format title
     title = POSTGAME_THREAD_TITLE
@@ -248,16 +257,15 @@ def _post_postgame_thread(game):
         title = title.replace("{{LOSER_NAME}}", home_name)
         title = title.replace("{{LOSER_SCORE}}", str(home_score))
 
+    # Check crosspost
+    cross = []
+    if away_team_abbr in team_crosspost:
+        cross.append(team_crosspost[away_team_abbr])
+    if home_team_abbr in team_crosspost:
+        cross.append(team_crosspost[home_team_abbr])
+        
     # Submit post
-    print("Posting: %s" % title)
-    submission = subreddit.submit(
-        title=title,
-        selftext=_format_game_thread(
-            game["gameId"], post_format=POSTGAME_POST_FORMAT),
-        send_replies=False,
-        flair_id=POST_FLAIR_GAME_THREAD)
-    submission.mod.distinguish()
-
+    _post_sticky_thread(title, _format_game_thread(game["gameId"], post_format=POSTGAME_POST_FORMAT), POST_FLAIR_GAME_THREAD, "blank", cross)
 
 def _post_game_thread(game):
     """
@@ -272,23 +280,64 @@ def _post_game_thread(game):
 
     # Get stats
     home_name = game["homeTeamName"]
+    home_team_abbr = game["homeTeamAbbr"]
     away_name = game["awayTeamName"]
+    away_team_abbr = game["awayTeamAbbr"]
 
     # Format title
     title = GAME_THREAD_TITLE
     title = title.replace("{{HOME_TEAM}}", home_name)
     title = title.replace("{{AWAY_TEAM}}", away_name)
 
+    # Check crosspost
+    cross = []
+    if away_team_abbr in team_crosspost:
+        cross.append(team_crosspost[away_team_abbr])
+    if home_team_abbr in team_crosspost:
+        cross.append(team_crosspost[home_team_abbr])
+
     # Submit post
+    _post_sticky_thread(title, _format_game_thread(game["gameId"]), POST_FLAIR_GAME_THREAD, "new", cross)
+
+def _post_sticky_thread(title, text, flair, sort, crosspost=None):
+    """
+    Post a thread and manage stickies
+    """
+
+    # Post
     print("Posting: %s" % title)
     submission = subreddit.submit(
         title=title,
-        selftext=_format_game_thread(game["gameId"]),
+        selftext=text,
         send_replies=False,
-        flair_id=POST_FLAIR_GAME_THREAD)
-    submission.mod.suggested_sort("new")
+        flair_id=flair)
+
+    # Configure
+    submission.mod.suggested_sort(sort)
     submission.mod.distinguish()
 
+    # Get stickies
+    stickies = get_sticky_threads()
+
+    # Free space, use it
+    if len(stickies) < 2:
+        submission.mod.sticky(True)
+    else:
+        # Take over the non-game thread sticky
+        if GAME_THREAD_LIVE_TAG in stickies[0].title or GAME_THREAD_FINAL_TAG in stickies[0].title:
+            stickies[0].sticky(False)
+            submission.mod.sticky(True)
+        else:
+            # Sticky to bottom as last resort
+            submission.mod.sticky(True, True)
+
+    # Crosspost and sticky
+    if crosspost is not None:
+        for sub in crosspost:
+            print("Cross-Posting to", sub.name)
+            cpost = submission.crosspost(sub)
+            cpost.mod.distinguish()
+            cpost.mod.sticky(True, True)
 
 def update_games():
     """
@@ -313,4 +362,5 @@ def update_games():
     # Check for final threads to post
     for game in api_data["games"]:
         if game["isGameOver"] and game["gameId"] not in final_threads:
+            active_threads[game["gameId"]].mod.sticky(False)
             _post_postgame_thread(game)
