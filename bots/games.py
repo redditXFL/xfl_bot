@@ -27,7 +27,8 @@ team_reddits = {
 # Teams that want to crosspost
 team_crosspost = {
     "LA": reddit.subreddit("lawildcats"),
-    "STL": reddit.subreddit("battlehawks")
+    "STL": reddit.subreddit("battlehawks"),
+    "DC": reddit.subreddit("dcdefenders")
 }
 
 # Titles
@@ -335,7 +336,11 @@ def _post_sticky_thread(title, text, flair, sort, crosspost=None):
     if crosspost is not None:
         for sub in crosspost:
             print("Cross-Posting to", sub.name)
-            cpost = submission.crosspost(sub)
+            cpost = subreddit.submit(
+                title=title,
+                selftext=text,
+                send_replies=False,
+                flair_id=flair)
             cpost.mod.distinguish()
             cpost.mod.sticky(True, True)
 
