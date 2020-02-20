@@ -28,7 +28,9 @@ team_reddits = {
 team_crosspost = {
     "LA": reddit.subreddit("lawildcats"),
     "STL": reddit.subreddit("battlehawks"),
-    "DC": reddit.subreddit("dcdefenders")
+    "DC": reddit.subreddit("dcdefenders"),
+    "SEA": reddit.subreddit("SeattleDragons"),
+    "TB": reddit.subreddit("vipers")
 }
 
 # Titles
