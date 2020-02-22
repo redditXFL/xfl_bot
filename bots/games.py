@@ -345,8 +345,7 @@ def _post_sticky_thread(title, text, flair, sort, crosspost=None):
             cpost = sub.submit(
                 title=title,
                 selftext=text,
-                send_replies=False,
-                flair_id=flair)
+                send_replies=False)
             cpost.mod.distinguish()
             cpost.mod.sticky(True, True)
 
