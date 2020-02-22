@@ -12,7 +12,7 @@ from bots import games as game_bot
 #   interval: Interval to run at
 SCHEDULE = [
     {
-        "name": "Game Thread Updater"
+        "name": "Game Thread Updater",
         "function": game_bot.update_games,
         "args": (),
         "interval": timedelta(seconds=30)

@@ -368,6 +368,6 @@ def update_games():
 
     # Check for final threads to post
     for game in api_data["games"]:
-        if game["isGameOver"] and game["gameId"] not in final_threads:
+        if game["gameId"] in active_threads and game["isGameOver"] and game["gameId"] not in final_threads:
             active_threads[game["gameId"]].mod.sticky(False)
             _post_postgame_thread(game)
