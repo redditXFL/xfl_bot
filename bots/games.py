@@ -342,7 +342,7 @@ def _post_sticky_thread(title, text, flair, sort, crosspost=None):
     if crosspost is not None:
         for sub in crosspost:
             print("Cross-Posting to", sub.name)
-            cpost = subreddit.submit(
+            cpost = sub.submit(
                 title=title,
                 selftext=text,
                 send_replies=False,
