@@ -18,7 +18,7 @@ team_reddits = {
     "DC": "[r/DCDefenders](https://www.reddit.com/r/DCDefenders/)",
     "TB": "[r/vipers](https://www.reddit.com/r/vipers/)",
     "NY": "[r/NewYorkGuardians](https://www.reddit.com/r/NewYorkGuardians/)",
-    "HOU": "[r/roughnecks](https://www.reddit.com/r/Roughnecks/)",
+    "HOU": "[r/roughnecks](https://www.reddit.com/r/roughnecks/)",
     "LA": "[r/lawildcats](https://www.reddit.com/r/lawildcats/)",
     "DAL": "[r/DallasRenegades](https://www.reddit.com/r/DallasRenegades/)",
     "STL": "[r/battlehawks](https://www.reddit.com/r/battlehawks/)"
