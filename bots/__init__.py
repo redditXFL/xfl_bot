@@ -1,6 +1,6 @@
 import praw
 
-SUBREDDIT = "XFLDev"
+SUBREDDIT = "xfl"
 
 # Reddit settings
 reddit = praw.Reddit('xfl_bot')
