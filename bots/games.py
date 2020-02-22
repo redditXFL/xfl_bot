@@ -220,9 +220,13 @@ def _get_game_threads():
 
             # Determine thread type
             if GAME_THREAD_LIVE_TAG in submission.title:
-                active_threads[game_id] = submission
+                if game_id not in active_threads:
+                    active_threads[game_id] = []
+                active_threads[game_id].append(submission)
             elif GAME_THREAD_FINAL_TAG in submission.title:
-                final_threads[game_id] = submission
+                if game_id not in final_threads:
+                    final_threads[game_id] = []
+                final_threads[game_id].append(submission)
 
     return active_threads, final_threads
 
@@ -361,13 +365,14 @@ def update_games():
         if game["gameId"] not in active_threads:
             _post_game_thread(game)
         else:
-            submission = active_threads[game["gameId"]]
-            print("Updating: %s" % submission.title)
-            submission.edit(_format_game_thread(
-                game["gameId"], submission_id=submission.id))
+            for submission in active_threads[game["gameId"]]:
+                print("Updating: %s" % submission.title)
+                submission.edit(_format_game_thread(
+                    game["gameId"], submission_id=submission.id))
 
     # Check for final threads to post
     for game in api_data["games"]:
         if game["gameId"] in active_threads and game["isGameOver"] and game["gameId"] not in final_threads:
-            active_threads[game["gameId"]].mod.sticky(False)
+            for submission in active_threads[game["gameId"]]:
+                submission.mod.sticky(False)
             _post_postgame_thread(game)
