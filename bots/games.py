@@ -210,23 +210,21 @@ def _get_game_threads():
     final_threads = {}
 
     for submission in redditor.submissions.new(limit=25):
-        if submission.subreddit == subreddit:
+        # Get game ID
+        game_id_s = re_game_id.search(submission.selftext)
+        if game_id_s is None:
+            continue
+        game_id = int(game_id_s.group(1))
 
-            # Get game ID
-            game_id_s = re_game_id.search(submission.selftext)
-            if game_id_s is None:
-                continue
-            game_id = int(game_id_s.group(1))
-
-            # Determine thread type
-            if GAME_THREAD_LIVE_TAG in submission.title:
-                if game_id not in active_threads:
-                    active_threads[game_id] = []
-                active_threads[game_id].append(submission)
-            elif GAME_THREAD_FINAL_TAG in submission.title:
-                if game_id not in final_threads:
-                    final_threads[game_id] = []
-                final_threads[game_id].append(submission)
+        # Determine thread type
+        if GAME_THREAD_LIVE_TAG in submission.title:
+            if game_id not in active_threads:
+                active_threads[game_id] = []
+            active_threads[game_id].append(submission)
+        elif GAME_THREAD_FINAL_TAG in submission.title:
+            if game_id not in final_threads:
+                final_threads[game_id] = []
+            final_threads[game_id].append(submission)
 
     return active_threads, final_threads
 
