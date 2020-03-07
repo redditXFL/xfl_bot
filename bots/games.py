@@ -344,6 +344,7 @@ def _post_sticky_thread(title, text, flair, sort, crosspost=None):
                 title=title,
                 selftext=text,
                 send_replies=False)
+            cpost.mod.suggested_sort(sort)
             cpost.mod.distinguish()
             cpost.mod.sticky(True, True)
 
